@@ -25,19 +25,19 @@ jobs:
       - name: Checkout repository content - https://github.com/actions/checkout
         uses: actions/checkout@v4
 
-      # - name: Run PHP-CS-Fixer - https://github.com/marketplace/actions/cs-fixer-for-php
-        # uses: erkenes/php-cs-fixer-action@main
-        # with:
-          # args: --config="./.github/workflows/.php-cs-fixer.dist.php"
-
-      - name: Setup Python - https://github.com/actions/setup-python
-        uses: actions/setup-python@v5
+      - name: Setup .NET Core SDK - https://github.com/actions/setup-dotnet
+        uses: actions/setup-dotnet@v2
         with:
-          python-version: '3.x' #  Latest stable major version of Python
+          dotnet-version: '5.x' # Latest stable major version of .NET Core SDK
 
-      - name: Install Python dependencies
+      - name: Install .NET dependencies
         run: |
-          python -m pip install --upgrade pip
+          dotnet restore
 
-      - name: Pre-commit action - https://github.com/pre-commit/action
-        uses: pre-commit/action@v3.0.1
+      - name: Build the project
+        run: |
+          dotnet build --configuration Release
+
+      - name: Run tests
+        run: |
+          dotnet test --configuration Release

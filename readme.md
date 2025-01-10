@@ -16,26 +16,29 @@ For security reason, it is recommended to keep the default parameters `login = N
 
 # Usage
 
-## Python dependencies
+## C# dependencies
 
 ```.ps1
-python -m pip install lxml openpyxl pandas selenium webdriver-manager
+dotnet add package Selenium.WebDriver
+dotnet add package Selenium.WebDriver.ChromeDriver
+dotnet add package Selenium.WebDriver.GeckoDriver
+dotnet add package EPPlus
 ```
 
-## Functions
+## Methods
 
-### `scalable_capital_portfolio_import`
+### `ScalableCapitalPortfolioImport`
 
-```.py
-scalable_capital_portfolio_import(login=None, password=None, file_type='.xlsx', output_path=os.path.join(os.path.expanduser('~'), 'Downloads', 'Assets Scalable Capital.xlsx'))
+```.cs
+ScalableCapitalPortfolioImport(string login = null, string password = null, string fileType = ".xlsx", string outputPath = null, bool returnDataTable = false)
 ```
 
 <br>
 
-### `trade_republic_portfolio_import`
+### `TradeRepublicPortfolioImport`
 
-```.py
-trade_republic_portfolio_import(login=None, password=None, file_type='.xlsx', output_path=os.path.join(os.path.expanduser('~'), 'Downloads', 'Assets Trade Republic.xlsx'))
+```.cs
+TradeRepublicPortfolioImport(string login = null, string password = null, string fileType = ".xlsx", string outputPath = null, bool returnDataTable = false)
 ```
 
 #### Description
@@ -44,18 +47,18 @@ trade_republic_portfolio_import(login=None, password=None, file_type='.xlsx', ou
 
 #### Parameters
 
-- `login`: _str_, default: _None_. If defined (e.g. `login = 'email@email.com'`), login information is automatically filled; otherwise, user needs to manually add them once the WebDriver initiates.
-- `password`: _str_, default: _None_. If defined (e.g. `password = '12345'`), password information is automatically filled; otherwise, user needs to manually add them once the WebDriver initiates.
-- `file_type`: _str_, options: _'.xlsx'_, _'.csv'_ and _None_, default: _'.xlsx'_. If _None_, imported assets dataset is copied to the system clipboard.
-- `output_path`: _path object_, default: _None_. If _None_, imported assets dataset is copied to the system clipboard.
-- `return_df`: _bool_, default: _False_. Returns DataFrame from function.
+- `login`: _string_, default: _null_. If defined (e.g. `login = "email@email.com"`), login information is automatically filled; otherwise, user needs to manually add them once the WebDriver initiates.
+- `password`: _string_, default: _null_. If defined (e.g. `password = "12345"`), password information is automatically filled; otherwise, user needs to manually add them once the WebDriver initiates.
+- `fileType`: _string_, options: _".xlsx"_, _".csv"_ and _null_, default: _".xlsx"_. If _null_, imported assets dataset is copied to the system clipboard.
+- `outputPath`: _string_, default: _null_. If _null_, imported assets dataset is copied to the system clipboard.
+- `returnDataTable`: _bool_, default: _false_. Returns DataTable from method.
 
 <br>
 
-### `selenium_webdriver_quit`
+### `SeleniumWebDriverQuit`
 
-```.py
-selenium_webdriver_quit()
+```.cs
+SeleniumWebDriverQuit()
 ```
 
 #### Description
@@ -68,36 +71,36 @@ selenium_webdriver_quit()
 
 ## Code Workflow Example
 
-```.py
-# Scrap, import and save as .csv portfolio asset information from Scalable Capital
-scalable_capital_portfolio_import(
-    login=None,
-    password=None,
-    file_type='.xlsx',
-    output_path=os.path.join(
-        os.path.expanduser('~'),
-        'Downloads',
-        'Assets Scalable Capital.xlsx',
+```.cs
+// Scrap, import and save as .csv portfolio asset information from Scalable Capital
+var importer = new NeobrokerPortfolioImporter();
+importer.ScalableCapitalPortfolioImport(
+    login: null,
+    password: null,
+    fileType: ".xlsx",
+    outputPath: Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+        "Downloads",
+        "Assets Scalable Capital.xlsx"
     ),
-    return_df=False,
-)
+    returnDataTable: false
+);
 
-# Scrap, import and save as .csv portfolio asset information from Trade Republic
-trade_republic_portfolio_import(
-    login=None,
-    password=None,
-    file_type='.xlsx',
-    output_path=os.path.join(
-        os.path.expanduser('~'),
-        'Downloads',
-        'Assets Trade Republic.xlsx',
+// Scrap, import and save as .csv portfolio asset information from Trade Republic
+importer.TradeRepublicPortfolioImport(
+    login: null,
+    password: null,
+    fileType: ".xlsx",
+    outputPath: Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+        "Downloads",
+        "Assets Trade Republic.xlsx"
     ),
-    return_df=False,
-)
+    returnDataTable: false
+);
 
-# Quit WebDriver
-if 'driver' in vars():
-    driver.quit()
+// Quit WebDriver
+importer.SeleniumWebDriverQuit();
 ```
 
 # See also
